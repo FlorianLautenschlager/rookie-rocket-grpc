@@ -1,4 +1,4 @@
-package de.qaware.rookie.cloud.grpc;
+package de.qaware.rookie.cloud.grpc.server;
 
 public class MainServer {
 

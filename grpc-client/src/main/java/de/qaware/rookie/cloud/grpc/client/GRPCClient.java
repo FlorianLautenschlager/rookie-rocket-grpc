@@ -1,4 +1,4 @@
-package de.qaware.rookie.cloud.grpc;
+package de.qaware.rookie.cloud.grpc.client;
 
 import de.qaware.rookie.cloud.grpc.proto.Feature;
 import de.qaware.rookie.cloud.grpc.proto.Point;
