@@ -7,9 +7,12 @@ public class MainServer {
 
     public static void main(String[] args) throws Exception {
 
+        String zipkin_server = System.getenv("ZIPKIN_SERVER");
+        if (zipkin_server == null) zipkin_server = "http://localhost:9411/api/v2/spans";
+
         DiagnosabilityControl.enableTracing(
                 "main-server",
-                "http://localhost:9411/api/v2/spans",
+                zipkin_server,
                 Samplers.alwaysSample(),
                 false
         );
