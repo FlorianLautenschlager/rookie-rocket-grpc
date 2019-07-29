@@ -46,23 +46,6 @@ See the classes:
 - `GRPCServer` for the implementation of the GRPC Server
 - `MainClient` for putting everything together
 
-## Activate the Observability code
-Just copy and past the following code snippet into the `MainServer` and `MainClient` class.
-
-```java
-DiagnosabilityControl.enableTracing(
-         "main-server",
-         "http://localhost:9411/api/v2/spans",
-         Samplers.alwaysSample(),
-         false
-);
-
-DiagnosabilityControl.enablePrometheusEndpoint(
-         8080,
-         true
-);
-```
-
 ## Build the project
 To build the project simple run the following command:
 ````bash

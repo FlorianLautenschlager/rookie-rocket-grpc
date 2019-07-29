@@ -1,6 +1,8 @@
 package de.qaware.rookie.cloud.grpc.client;
 
+import de.qaware.rookie.cloud.grpc.diagnosability.DiagnosabilityControl;
 import de.qaware.rookie.cloud.grpc.proto.dto.HelloReply;
+import io.opencensus.trace.samplers.Samplers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,6 +11,14 @@ public class MainClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(MainClient.class);
 
     public static void main(String[] args) {
+
+        DiagnosabilityControl.enableTracing(
+                "main-server",
+                "http://localhost:9411/api/v2/spans",
+                Samplers.alwaysSample(),
+                false
+        );
+
         GRPCClient client = new GRPCClient("localhost", 8612);
 
         LOGGER.info("Staring server RPC :-)");
