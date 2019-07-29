@@ -1,0 +1,15 @@
+version: '3'
+services:
+  server:
+    build: grpc-server
+    environment:
+      ZIPKIN_SERVER: 'http://zipkin:9411/api/v2/spans'
+  client:
+    build: grpc-client
+    environment:
+      ZIPKIN_SERVER: 'http://zipkin:9411/api/v2/spans'
+      GRPC_SERVER: 'server'
+  zipkin:
+    image: openzipkin/zipkin
+    ports:
+    - "9411:9411"
