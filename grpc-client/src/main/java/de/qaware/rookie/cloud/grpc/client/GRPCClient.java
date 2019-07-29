@@ -1,7 +1,7 @@
 package de.qaware.rookie.cloud.grpc.client;
 
-import de.qaware.rookie.cloud.grpc.proto.HelloReply;
-import de.qaware.rookie.cloud.grpc.proto.HelloRequest;
+import de.qaware.rookie.cloud.grpc.proto.dto.HelloReply;
+import de.qaware.rookie.cloud.grpc.proto.dto.HelloRequest;
 import de.qaware.rookie.cloud.grpc.proto.HelloServiceGrpc;
 import de.qaware.rookie.cloud.grpc.proto.ValidationError;
 import de.qaware.rookie.cloud.grpc.server.ErrorKey;

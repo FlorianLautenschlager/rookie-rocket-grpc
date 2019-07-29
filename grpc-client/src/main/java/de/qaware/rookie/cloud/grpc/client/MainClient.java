@@ -1,6 +1,6 @@
 package de.qaware.rookie.cloud.grpc.client;
 
-import de.qaware.rookie.cloud.grpc.proto.HelloReply;
+import de.qaware.rookie.cloud.grpc.proto.dto.HelloReply;
 import io.opencensus.exporter.trace.logging.LoggingTraceExporter;
 import io.opencensus.exporter.trace.zipkin.ZipkinTraceExporter;
 import io.opencensus.trace.Tracing;
