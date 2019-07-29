@@ -2,4 +2,5 @@ rootProject.name = 'rookie-cloud-native-grpc'
 
 include 'grpc-client'
 include 'grpc-server'
+include 'grpc-api'
 

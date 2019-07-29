@@ -1,25 +1,5 @@
-plugins {
-    id "com.google.protobuf" version "0.8.10"
-}
-
 dependencies {
-    implementation 'javax.annotation:javax.annotation-api:1.3.2'
+    compile project(':grpc-api')
 
     implementation 'io.grpc:grpc-netty-shaded:1.22.1'
-}
-
-protobuf {
-    protoc {
-        artifact = "com.google.protobuf:protoc:3.7.1"
-    }
-    plugins {
-        grpc {
-            artifact = 'io.grpc:protoc-gen-grpc-java:1.22.1'
-        }
-    }
-    generateProtoTasks {
-        all()*.plugins {
-            grpc {}
-        }
-    }
 }

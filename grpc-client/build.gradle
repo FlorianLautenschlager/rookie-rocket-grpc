@@ -1,3 +1,5 @@
 dependencies {
-    compile project(':grpc-server')
+    compile project(':grpc-api')
+
+    implementation 'io.grpc:grpc-netty-shaded:1.22.1'
 }
