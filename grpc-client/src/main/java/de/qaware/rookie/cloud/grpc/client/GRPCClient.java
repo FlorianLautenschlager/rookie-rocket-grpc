@@ -1,24 +1,33 @@
 package de.qaware.rookie.cloud.grpc.client;
 
-import de.qaware.rookie.cloud.grpc.proto.Feature;
-import de.qaware.rookie.cloud.grpc.proto.Point;
-import de.qaware.rookie.cloud.grpc.proto.RouteGuideGrpc;
+import de.qaware.rookie.cloud.grpc.proto.HelloReply;
+import de.qaware.rookie.cloud.grpc.proto.HelloRequest;
+import de.qaware.rookie.cloud.grpc.proto.HelloServiceGrpc;
+import de.qaware.rookie.cloud.grpc.proto.ValidationError;
+import de.qaware.rookie.cloud.grpc.server.ErrorKey;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import io.grpc.Metadata;
+import io.grpc.Status;
 import io.grpc.StatusRuntimeException;
+import io.grpc.stub.StreamObserver;
 import io.opencensus.common.Scope;
 import io.opencensus.trace.Tracer;
 import io.opencensus.trace.Tracing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
+
+
 public class GRPCClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GRPCClient.class);
 
-    private final ManagedChannel channel;
-    private final RouteGuideGrpc.RouteGuideBlockingStub blockingStub;
-    private final RouteGuideGrpc.RouteGuideStub asyncStub;
+    private final HelloServiceGrpc.HelloServiceBlockingStub blockingStub;
+    private final HelloServiceGrpc.HelloServiceStub asyncStub;
 
     private static final Tracer tracer = Tracing.getTracer();
 
@@ -32,31 +41,98 @@ public class GRPCClient {
      * Construct client for accessing RouteGuide server using the existing channel.
      */
     public GRPCClient(ManagedChannelBuilder<?> channelBuilder) {
-        channel = channelBuilder.build();
-        blockingStub = RouteGuideGrpc.newBlockingStub(channel);
-        asyncStub = RouteGuideGrpc.newStub(channel);
+        ManagedChannel channel = channelBuilder.build();
+        blockingStub = HelloServiceGrpc.newBlockingStub(channel);
+        asyncStub = HelloServiceGrpc.newStub(channel);
     }
 
+    /**
+     * Class say hello on the blocking stub
+     *
+     * @return {@link HelloReply}
+     */
+    public HelloReply sayHelloBlocking() {
 
-    public Feature getFeature() {
-
-        Scope ss = tracer.spanBuilder("GRPCClient.getFeature").startScopedSpan();
+        Scope ss = tracer.spanBuilder("GRPCClient.sayHelloBlocking").startScopedSpan();
 
 
-        Point request = Point.newBuilder()
-                .setLatitude(10)
-                .setLongitude(11)
+        HelloRequest request = HelloRequest.newBuilder()
+                .setUser("Leander")
                 .build();
 
-        Feature feature = null;
+        HelloReply feature = null;
         try {
-            feature = blockingStub.getFeature(request);
+            feature = blockingStub.sayHello(request);
         } catch (StatusRuntimeException e) {
-            LOGGER.error("RPC failed:  {}", e.getStatus());
+            Metadata trailers = Status.trailersFromThrowable(e);
+            ValidationError validationError = trailers.get(ErrorKey.VALIDATION_ERROR_KEY);
+            LOGGER.error("RPC failed with status '{}' and validation error '{}'", e.getStatus(), validationError);
         } finally {
             ss.close();
         }
 
         return feature;
+    }
+
+    /**
+     * Class say hello on the async stub
+     *
+     * @return {@link HelloReply}
+     */
+    public void sayHelloAsync(Consumer<HelloReply> consumer) {
+
+        Scope ss = tracer.spanBuilder("GRPCClient.sayHelloAsync").startScopedSpan();
+
+        HelloRequest request = HelloRequest.newBuilder()
+                .setUser("Felix")
+                .build();
+
+        FeatureStreamObserver streamObserver = new FeatureStreamObserver(consumer);
+        try {
+            asyncStub.sayHello(request, streamObserver);
+
+            // Mark the end of requests
+            streamObserver.onCompleted();
+
+            // Receiving happens asynchronously
+            streamObserver.finishLatch.await(1, TimeUnit.MINUTES);
+        } catch (Exception e) {
+            streamObserver.onError(e);
+            LOGGER.error("Exception", e);
+
+        } finally {
+            ss.close();
+        }
+    }
+
+    static class FeatureStreamObserver implements StreamObserver<HelloReply> {
+
+        private final Consumer<HelloReply> consumer;
+        final CountDownLatch finishLatch;
+
+
+        public FeatureStreamObserver(Consumer<HelloReply> consumer) {
+            this.consumer = consumer;
+            this.finishLatch = new CountDownLatch(1);
+
+        }
+
+        @Override
+        public void onNext(HelloReply value) {
+            consumer.accept(value);
+        }
+
+        @Override
+        public void onError(Throwable t) {
+            Status status = Status.fromThrowable(t);
+            LOGGER.error("sayHelloAsync Failed: {}", status);
+            finishLatch.countDown();
+        }
+
+        @Override
+        public void onCompleted() {
+            LOGGER.info("Finished sayHelloAsync");
+            finishLatch.countDown();
+        }
     }
 }

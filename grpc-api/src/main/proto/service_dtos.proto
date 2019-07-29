@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "de.qaware.rookie.cloud.grpc.proto";
+
+package dto;
+
+message HelloRequest {
+    string user = 1;
+}
+
+message HelloReply {
+    HelloRequest request = 1;
+    string salutation = 2;
+}

@@ -1,6 +1,6 @@
 package de.qaware.rookie.cloud.grpc.client;
 
-import de.qaware.rookie.cloud.grpc.proto.Feature;
+import de.qaware.rookie.cloud.grpc.proto.HelloReply;
 import io.opencensus.exporter.trace.logging.LoggingTraceExporter;
 import io.opencensus.exporter.trace.zipkin.ZipkinTraceExporter;
 import io.opencensus.trace.Tracing;
@@ -30,9 +30,12 @@ public class MainClient {
         LoggingTraceExporter.register();
 
         GRPCClient client = new GRPCClient("localhost", 8612);
-        Feature feature = client.getFeature();
 
-        LOGGER.info("Feature '{}'", feature);
+        client.sayHelloAsync(helloReply -> LOGGER.info("Async HelloRequest '{}'", helloReply));
+
+        HelloReply blockingHello = client.sayHelloBlocking();
+        LOGGER.info("Blocking HelloRequest '{}'", blockingHello);
+
 
         Tracing.getExportComponent().shutdown();
     }
