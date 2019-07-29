@@ -10,6 +10,5 @@ import "service_dtos.proto";
 
 
 service HelloService {
-   // Obtains the feature at a given position.
-   rpc sayHello(dto.HelloRequest) returns (dto.HelloReply) {}
+   rpc sayHello (dto.HelloRequest) returns (dto.HelloReply) {}
 }

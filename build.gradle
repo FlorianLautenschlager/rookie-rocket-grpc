@@ -26,10 +26,10 @@ subprojects {
         implementation 'io.opencensus:opencensus-exporter-stats-prometheus:0.21.0'
         implementation 'io.opencensus:opencensus-exporter-trace-zipkin:0.21.0'
         implementation 'io.opencensus:opencensus-exporter-trace-logging:0.21.0'
+        implementation 'io.opencensus:opencensus-contrib-log-correlation-log4j2:0.21.0'
 
         implementation 'io.prometheus:simpleclient_httpserver:0.6.0'
-
-
+        implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.9.1'
     }
 }
 

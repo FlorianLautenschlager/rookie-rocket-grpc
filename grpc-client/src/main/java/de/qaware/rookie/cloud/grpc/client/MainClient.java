@@ -1,7 +1,6 @@
 package de.qaware.rookie.cloud.grpc.client;
 
 import de.qaware.rookie.cloud.grpc.proto.dto.HelloReply;
-import io.opencensus.exporter.trace.logging.LoggingTraceExporter;
 import io.opencensus.exporter.trace.zipkin.ZipkinTraceExporter;
 import io.opencensus.trace.Tracing;
 import io.opencensus.trace.config.TraceConfig;
@@ -27,9 +26,11 @@ public class MainClient {
                         .build());
 
         // Registers logging trace exporter.
-        LoggingTraceExporter.register();
+        //LoggingTraceExporter.register();
 
         GRPCClient client = new GRPCClient("localhost", 8612);
+
+        LOGGER.info("Staring server RPC :-)");
 
         client.sayHelloAsync(helloReply -> LOGGER.info("Async HelloRequest '{}'", helloReply));
 

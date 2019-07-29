@@ -11,18 +11,22 @@ import io.grpc.stub.StreamObserver;
 import io.opencensus.common.Scope;
 import io.opencensus.trace.Tracer;
 import io.opencensus.trace.Tracing;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Service extends HelloServiceGrpc.HelloServiceImplBase {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(Service.class);
     private static final Tracer tracer = Tracing.getTracer();
 
     @Override
     public void sayHello(HelloRequest request, StreamObserver<HelloReply> responseObserver) {
 
         try (Scope ss = tracer.spanBuilder("service.getFeature").startScopedSpan()) {
+            LOGGER.info("Received request");
             responseObserver.onNext(HelloReply.newBuilder()
                     .setRequest(request)
-                    .setSalutation("Hello '" + request.getUser() + "'. Yeah are awesome.")
+                    .setSalutation("Hello '" + request.getUser() + "'. Yeah you are awesome.")
                     .build());
             responseObserver.onCompleted();
         } catch (Exception e) {

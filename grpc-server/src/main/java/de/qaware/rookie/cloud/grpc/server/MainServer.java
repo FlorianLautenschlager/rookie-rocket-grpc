@@ -2,7 +2,6 @@ package de.qaware.rookie.cloud.grpc.server;
 
 import io.opencensus.contrib.grpc.metrics.RpcViews;
 import io.opencensus.exporter.stats.prometheus.PrometheusStatsCollector;
-import io.opencensus.exporter.trace.logging.LoggingTraceExporter;
 import io.opencensus.exporter.trace.zipkin.ZipkinTraceExporter;
 import io.opencensus.trace.Tracing;
 import io.opencensus.trace.config.TraceConfig;
@@ -32,7 +31,7 @@ public class MainServer {
                         .build());
 
         // Registers logging trace exporter.
-        LoggingTraceExporter.register();
+        //LoggingTraceExporter.register();
 
 
         GRPCServer server = new GRPCServer(8612);

@@ -2,7 +2,12 @@
 <Configuration status="WARN">
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
-            <PatternLayout pattern="%d{DEFAULT_MICROS} [%t] %-5level %logger{36} - %msg%n"/>
+            <JsonLayout compact="true" eventEol="true">
+                <KeyValuePair key="@timestamp" value="$${date:yyyy-MM-dd'T'HH:mm:ss,SSS}"/>
+                <KeyValuePair key="hostName" value="${hostName}"/>
+                <KeyValuePair key="traceId" value="$${ctx:traceId}"/>
+                <KeyValuePair key="spanId" value="$${ctx:spanId}"/>
+            </JsonLayout>
         </Console>
     </Appenders>
     <Loggers>
