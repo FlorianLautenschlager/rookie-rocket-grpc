@@ -14,9 +14,9 @@ import io.opencensus.trace.Tracing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Service extends HelloServiceGrpc.HelloServiceImplBase {
+public class GRPCService extends HelloServiceGrpc.HelloServiceImplBase {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(Service.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GRPCService.class);
     private static final Tracer tracer = Tracing.getTracer();
 
     @Override

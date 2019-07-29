@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 
-public class GRPCClient {
+class GRPCClient {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GRPCClient.class);
 
@@ -32,7 +32,7 @@ public class GRPCClient {
     private static final Tracer tracer = Tracing.getTracer();
 
 
-    public GRPCClient(String host, int port) {
+    GRPCClient(String host, int port) {
         this(ManagedChannelBuilder.forAddress(host, port).usePlaintext());
     }
 
@@ -40,7 +40,7 @@ public class GRPCClient {
     /**
      * Construct client for accessing RouteGuide server using the existing channel.
      */
-    public GRPCClient(ManagedChannelBuilder<?> channelBuilder) {
+    private GRPCClient(ManagedChannelBuilder<?> channelBuilder) {
         ManagedChannel channel = channelBuilder.build();
         blockingStub = HelloServiceGrpc.newBlockingStub(channel);
         asyncStub = HelloServiceGrpc.newStub(channel);
@@ -51,7 +51,7 @@ public class GRPCClient {
      *
      * @return {@link HelloReply}
      */
-    public HelloReply sayHelloBlocking() {
+    HelloReply sayHelloBlocking() {
 
         Scope ss = tracer.spanBuilder("GRPCClient.sayHelloBlocking").startScopedSpan();
 
@@ -111,7 +111,7 @@ public class GRPCClient {
         final CountDownLatch finishLatch;
 
 
-        public FeatureStreamObserver(Consumer<HelloReply> consumer) {
+        FeatureStreamObserver(Consumer<HelloReply> consumer) {
             this.consumer = consumer;
             this.finishLatch = new CountDownLatch(1);
 

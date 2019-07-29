@@ -7,17 +7,17 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-public class GRPCServer {
+class GRPCServer {
 
     private final Logger LOGGER = LoggerFactory.getLogger(GRPCServer.class);
 
     private final Server server;
     private final int port;
 
-    public GRPCServer(int port) {
+    GRPCServer(int port) {
         this.port = port;
         server = ServerBuilder.forPort(port)
-                .addService(new Service())
+                .addService(new GRPCService())
                 .build();
     }
 
@@ -25,7 +25,7 @@ public class GRPCServer {
     /**
      * Start serving requests.
      */
-    public void start() throws IOException {
+    void start() throws IOException {
         LOGGER.info("*** starting server on port '{}'", port);
         server.start();
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
@@ -39,7 +39,7 @@ public class GRPCServer {
     /**
      * Stop serving requests and shutdown resources.
      */
-    public void stop() {
+    private void stop() {
         if (server != null) {
             server.shutdown();
         }

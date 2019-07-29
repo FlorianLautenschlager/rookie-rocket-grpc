@@ -9,7 +9,7 @@ public class ErrorKey {
     public static final Metadata.Key<ValidationError> VALIDATION_ERROR_KEY = ProtoUtils.keyForProto(ValidationError.getDefaultInstance());
 
     private ErrorKey() {
-
+        //avoid instance
     }
 
 }
