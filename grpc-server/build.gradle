@@ -1,0 +1,17 @@
+dependencies {
+    implementation project(':grpc-api')
+
+    implementation 'io.grpc:grpc-netty-shaded:1.22.1'
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'de.qaware.rookie.cloud.grpc.server.MainServer'
+    }
+
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+
+}
