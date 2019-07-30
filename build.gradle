@@ -1,0 +1,25 @@
+allprojects {
+    group 'de.qaware'
+    version '1.0-SNAPSHOT'
+
+    repositories {
+        mavenCentral()
+    }
+}
+
+subprojects {
+    apply plugin: 'idea'
+    apply plugin: 'java'
+
+    sourceCompatibility = 1.12
+    targetCompatibility = 1.12
+
+    dependencies {
+        implementation 'org.slf4j:slf4j-api:1.7.26'
+
+
+        implementation 'io.grpc:grpc-protobuf:1.22.1'
+        implementation 'io.grpc:grpc-stub:1.22.1'
+    }
+}
+
